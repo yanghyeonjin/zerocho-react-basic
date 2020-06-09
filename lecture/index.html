@@ -3,13 +3,16 @@
 <head>
     <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <!-- babel -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 </head>
 
 <body>
     <!-- 리액트는 컴포넌트를 렌더링 할 root가 필요하다. -->
     <div id="root"></div>
-    <script>
-        const e = React.createElement;
+    <script type="text/babel">
+        // const e = React.createElement;
 
         // 컴포넌트 클래스
         class LikeButton extends React.Component {
@@ -30,13 +33,22 @@
                 // 클릭했을 때, state 변경
                 // 1: element, 2: 해당 element의 속성, 3: 내부 content
                 // state의 변경에 따라 내부 content 변경 => 데이터와 화면을 일치시킨다.
-                return e('button', { onClick: () => { this.setState({ liked: true }) }, type: 'submit' }, this.state.liked === true ? 'Liked' : 'Like');
+                // return e('button', { onClick: () => { this.setState({ liked: true }) }, type: 'submit' }, this.state.liked === true ? 'Liked' : 'Like');
+
+                // 태그 사용
+                // 태그 사용을 위해서는 babel 필요
+                // JSX (JS + XML)
+                return <button type="submit" onClick={() => { this.setState({ liked: true }) }}>{this.state.liked === true ? 'Liked' : 'Like'}</button>;
             }
         }
     </script>
 
-    <script>
-        ReactDOM.render(e(LikeButton), document.querySelector('#root')); // -> 만든 컴포넌트를 실제로 웹페이지에 그린다. (LikeButton 클래스를 #root에 렌더링.)
+    <script type="text/babel">
+        // ReactDOM.render(e(LikeButton), document.querySelector('#root')); // -> 만든 컴포넌트를 실제로 웹페이지에 그린다. (LikeButton 클래스를 #root에 렌더링.)
+
+        // 태그로 사용했을 때
+        // 같은 컴포넌트라도 다른 state 가짐... 대박이다.
+        ReactDOM.render(<div><LikeButton /><LikeButton /></div>, document.querySelector('#root'));
     </script>
 
     <!-- 결과 -->
