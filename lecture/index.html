@@ -6,6 +6,7 @@
 </head>
 
 <body>
+    <!-- 리액트는 컴포넌트를 렌더링 할 root가 필요하다. -->
     <div id="root"></div>
     <script>
         const e = React.createElement;
@@ -14,10 +15,22 @@
         class LikeButton extends React.Component {
             constructor(props) {
                 super(props);
+
+                // state (바뀔 여지가 있는 부분)
+                // 기본 상태를 적어준다.
+                this.state = {
+                    liked: false
+                };
             }
 
             render() {
-                return e('button', null, 'Like'); // <button>Like</button> -> 이러한 Element를 만들겠다(O) 만든다(X)
+                // return e('button', null, 'Like'); // <button>Like</button> -> 이러한 Element를 만들겠다(O) 만든다(X)
+                // return e('button', { onClick: () => { console.log('clicked.') }, type: 'submit' }, 'Like'); // <button onclick="() => { console.log('clicked.') }" type="submit">Like</button>
+
+                // 클릭했을 때, state 변경
+                // 1: element, 2: 해당 element의 속성, 3: 내부 content
+                // state의 변경에 따라 내부 content 변경 => 데이터와 화면을 일치시킨다.
+                return e('button', { onClick: () => { this.setState({ liked: true }) }, type: 'submit' }, this.state.liked === true ? 'Liked' : 'Like');
             }
         }
     </script>
