@@ -25,18 +25,43 @@
                 };
             }
 
+            // class method
+            onSubmit = (e) => {
+                e.preventDefault();
+
+                // 입력한 값이 랜덤으로 생성한 숫자들의 곱과 같으면
+                if (parseInt(this.state.inputVal) === this.state.first * this.state.second) {
+                    this.setState({
+                        first: Math.ceil(Math.random() * 9),
+                        second: Math.ceil(Math.random() * 9),
+                        inputVal: '',
+                        result: `${this.state.inputVal} 정답`
+                    })
+                } else {
+                    this.setState({
+                        inputVal: '',
+                        result: '땡!'
+                    })
+                }
+            };
+
+            onChange = (e) => { this.setState({ inputVal: e.target.value }) };
+
             render() {
                 // 소괄호 넣어도 되고 안넣어도 되는데, 소괄호를 넣게되면 태그들의 정렬이 더 보기좋게 된다.
                 return (
                     <div>
                         {/* 중괄호를 쓰면 그 안에 자바스크립트 문법 사용이 가능하다.*/}
                         <div>{this.state.first} X {this.state.second} = ?</div>
-                        <form>
+
+                        {/* JSX와 JS는 분리시키자. */}
+                        <form onSubmit={this.onSubmit}>
                             {/* single 태그는 닫는 태그로 */}
                             {/* this는 GuGuDan 클래스를 의미 */}
-                            <input type="number" value={this.state.inputVal} onChange={(e) => { this.setState({ inputVal: e.target.value }) }} />
+                            <input type="number" name="answer" value={this.state.inputVal} onChange={this.onChange} />
                             <button>입력!</button>
                         </form>
+
                         <div>{this.state.result}</div>
                     </div>
                 );
