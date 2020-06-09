@@ -1,0 +1,33 @@
+<html>
+
+<head>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script>
+        const e = React.createElement;
+
+        // 컴포넌트 클래스
+        class LikeButton extends React.Component {
+            constructor(props) {
+                super(props);
+            }
+
+            render() {
+                return e('button', null, 'Like'); // <button>Like</button> -> 이러한 Element를 만들겠다(O) 만든다(X)
+            }
+        }
+    </script>
+
+    <script>
+        ReactDOM.render(e(LikeButton), document.querySelector('#root')); // -> 만든 컴포넌트를 실제로 웹페이지에 그린다. (LikeButton 클래스를 #root에 렌더링.)
+    </script>
+
+    <!-- 결과 -->
+    <!-- <div id="root"><button>Like</button></div> -->
+</body>
+
+</html>
