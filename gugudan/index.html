@@ -32,11 +32,19 @@
 
                 // 입력한 값이 랜덤으로 생성한 숫자들의 곱과 같으면
                 if (parseInt(this.state.inputVal) === this.state.first * this.state.second) {
-                    this.setState({
-                        first: Math.ceil(Math.random() * 9),
-                        second: Math.ceil(Math.random() * 9),
-                        inputVal: '',
-                        result: `${this.state.inputVal} 정답`
+                    // result에 현재 state의 inputVal을 사용하고 있고 inputVal을 바꾸려고 한다.
+                    // setState에 함수를 넣어서 prevState를 사용하자.
+                    // prevState: 예전 상태값
+
+                    // setState()는 비동기 !!!
+                    // 예전 state값으로 새로운 state값을 set 할 때, 아래와 같이 사용하자.
+                    this.setState((prevState) => {
+                        return {
+                            first: Math.ceil(Math.random() * 9),
+                            second: Math.ceil(Math.random() * 9),
+                            inputVal: '',
+                            result: `${prevState.inputVal} 정답`
+                        }
                     })
                 } else {
                     this.setState({
