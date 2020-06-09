@@ -46,16 +46,30 @@
                             result: `${prevState.inputVal} 정답`
                         }
                     })
+                    this.inputRef.focus();
                 } else {
                     this.setState({
                         inputVal: '',
                         result: '땡!'
                     })
+                    this.inputRef.focus();
                 }
             };
 
             onChange = (e) => { this.setState({ inputVal: e.target.value }) };
 
+            // DOM에 직접 접근하고 싶을 떄...
+            inputRef;
+
+            onRefInput = (c) => {
+                this.inputRef = c;
+            }
+
+            // state가 변경될 때, render()가 다시 실행됨.
+            // 나중에 성능 최적화 할 때 중요!
+
+            // render안에 익명함수는 되도록 바깥으로 빼자.
+            // 왜냐하면 render할 때마다 함수가 새로 생성되기 때문에.. 비효율적
             render() {
                 // 소괄호 넣어도 되고 안넣어도 되는데, 소괄호를 넣게되면 태그들의 정렬이 더 보기좋게 된다.
                 return (
@@ -68,7 +82,7 @@
                         <form onSubmit={this.onSubmit}>
                             {/* single 태그는 닫는 태그로 */}
                             {/* this는 GuGuDan 클래스를 의미 */}
-                            <input type="number" name="answer" value={this.state.inputVal} onChange={this.onChange} />
+                            <input ref={this.onRefInput} type="number" name="answer" value={this.state.inputVal} onChange={this.onChange} />
                             <button type="submit">입력!</button>
                         </form>
 
