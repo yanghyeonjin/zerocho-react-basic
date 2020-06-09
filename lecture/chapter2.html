@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 2</title>
+
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <!-- babel -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // 함수 컴포넌트
+        // setState랑 ref를 쓰지 않는 경우에 사용
+        const GuGuDan = () => {
+            return <div>Hello, Hooks</div>
+        }
+
+        // Hooks
+        // 함수 컴포넌트 + setState, ref 사용가능
+        const GuGuDanHooks = () => {
+            // state 선언 방법
+            // setFirst는 first 전용 setState
+            const [first, setFirst] = React.useState(Math.ceil(Math.random() * 9));
+            const [second, setSecond] = React.useState(Math.ceil(Math.random() * 9));
+            const [inputVal, setInputVal] = React.useState('');
+            const [result, setResult] = React.useState('');
+
+            const inputRef = React.useRef(null); // 초기값 셋팅 가능
+
+            const onChange = (e) => { setInputVal(e.target.value) };
+            const onSubmit = (e) => {
+                e.preventDefault();
+
+                if (parseInt(this.state.inputVal) === this.state.first * this.state.second) {
+                    setFirst(Math.ceil(Math.random() * 9));
+                    setSecond(Math.ceil(Math.random() * 9));
+                    setInputVal('');
+                    setResult(`${prevState.inputVal} 정답`);
+
+                    inputRef.current.focus(); // current 붙여주어야 한다.
+                } else {
+                    setInputVal('');
+                    setResult('땡!');
+
+                    inputRef.current.focus();
+                }
+            };
+
+            return (
+                <React.Fragment>
+                    <div>{first} X {second} = ?</div>
+
+                    <form onSubmit={this.onSubmit}>
+                        <input ref={this.onRefInput} type="number" name="answer" value={inputVal} onChange={this.onChange} />
+                        <button type="submit">입력!</button>
+                    </form>
+
+                    <div>{result}</div>
+                </React.Fragment>
+            );
+        }
+    </script>
+
+    <script type="text/babel">
+        ReactDOM.render(<GuGuDanHooks />, document.querySelector('#root'));
+    </script>
+</body>
+
+</html>
