@@ -32,13 +32,14 @@ module.exports = {
                     },
                     debug: true
                 }], '@babel/preset-react'],
-                plugins: ['@babel/plugin-proposal-class-properties']
+                plugins: ['@babel/plugin-proposal-class-properties', 'react-hot-loader/babel']
             }
         }]
     },
 
     output: {
         path: path.join(__dirname, 'dist'), // 현재 폴더(...../ending) 안에 들어있는 dist --> ...../ending/dist
-        filename: 'app.js'
+        filename: 'app.js',
+        publicPath: '/dist/'
     }
 }
