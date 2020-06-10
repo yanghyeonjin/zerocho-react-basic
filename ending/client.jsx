@@ -1,4 +1,6 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 
-ReactDOM.render(<GuGuDan />);
+const Ending = require('./Ending');
+
+ReactDOM.render(<Ending />, document.querySelector('#root'));
