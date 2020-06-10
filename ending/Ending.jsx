@@ -4,12 +4,54 @@ const { Component } = React;
 
 class Ending extends Component {
     state = {
-        text: 'Hello, webpack'
+        word: '제로초',
+        inputVal: '',
+        result: ''
     };
+
+    input;
+    onRefInput = (c) => {
+        this.input = c;
+    }
+
+    onChangeInput = (e) => {
+        this.setState({
+            inputVal: e.target.value
+        })
+    }
+
+    onSubmitForm = (e) => {
+        e.preventDefault();
+
+        // 단어의 마지막 글자와 입력한 글자의 첫번째 글자가 같으면
+        if (this.state.word[this.state.word.length - 1] === this.state.inputVal[0]) {
+            this.setState({
+                result: '딩동댕!',
+                word: this.state.inputVal,
+                inputVal: ''
+            })
+            this.input.focus();
+        } else {
+            this.setState({
+                result: '땡!',
+                inputVal: ''
+            })
+            this.input.focus();
+        }
+    }
 
     render() {
         return (
-            <h1>{this.state.text}</h1>
+            <>
+                <div>{this.state.word}</div>
+                <form onSubmit={this.onSubmitForm}>
+                    {/* value와 onChange는 짝꿍 아니면 defaultValue*/}
+                    <input type="text" ref={this.onRefInput} value={this.state.inputVal} onChange={this.onChangeInput} />
+                    {/* <input type="text" ref={this.onRefInput} defaultValue={this.state.inputVal} /> */}
+                    <button type="submit">입력!</button>
+                </form>
+                <div>{this.state.result}</div>
+            </>
         )
     }
 }

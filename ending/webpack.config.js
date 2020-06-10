@@ -26,7 +26,12 @@ module.exports = {
             loader: 'babel-loader', // 무엇을? babel을 (옛날 문법도 돌아가게끔 해주겠다.)
             options: {
                 // babel에 대한 설정
-                presets: ['@babel/preset-env', '@babel/preset-react'],
+                presets: [['@babel/preset-env', {
+                    targets: {
+                        browsers: ['last 2 chrome versions', '> 1% in KR'],
+                    },
+                    debug: true
+                }], '@babel/preset-react'],
                 plugins: ['@babel/plugin-proposal-class-properties']
             }
         }]
