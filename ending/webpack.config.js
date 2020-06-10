@@ -25,6 +25,7 @@ module.exports = {
             test: /\.jsx?/, // js와 jsx 파일에 rule을 적용하겠다.
             loader: 'babel-loader', // 무엇을? babel을 (옛날 문법도 돌아가게끔 해주겠다.)
             options: {
+                // babel에 대한 설정
                 presets: ['@babel/preset-env', '@babel/preset-react'],
                 plugins: ['@babel/plugin-proposal-class-properties']
             }
