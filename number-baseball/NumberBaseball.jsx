@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Try from './Try';
 
 // 숫자 4개를 겹치지 않고 랜덤하게 뽑는 함수
+// 함수 내부에 this를 쓰지 않는 경우에 컴포넌트 바깥에 만들어 놓으면 좋다. (외부에서 사용할 수 있도록)
 function getNumbers() {
     const candidate = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const array = [];
