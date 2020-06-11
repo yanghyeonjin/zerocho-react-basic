@@ -11,7 +11,7 @@ class ResponseCheck extends Component {
     startTime; // 초록색 나타난 때
     endTime; // 초록색 때 클릭한 순간
 
-    onCLickScreen = () => {
+    onClickScreen = () => {
         const { state, message, result } = this.state;
 
         if (state === 'waiting') {
@@ -80,7 +80,7 @@ class ResponseCheck extends Component {
 
         return (
             <>
-                <div id="screen" className={state} onClick={this.onCLickScreen}>
+                <div id="screen" className={state} onClick={this.onClickScreen}>
                     {message}
                 </div>
                 {this.renderAverage()}
