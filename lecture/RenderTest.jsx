@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 
 // props/state 변경 감지
 // > Component + shouldComponentUpdate를 사용하거나, PureComponent를 사용
@@ -33,12 +33,16 @@ class RenderTest extends Component {
     onClick = () => {
         // 값 변경 없이 setState만 호출하면 render 함수 다시 호출 됨.
         this.setState({})
+        this.inputRef.current.focus();
     }
+
+    inputRef = createRef();
 
     render() {
         console.log('렌더링', this.state);
         return (
             <div>
+                <input type="text" ref={this.inputRef} />
                 <button onClick={this.onClick}>클릭</button>
             </div>
         )
