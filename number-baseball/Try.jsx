@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, memo } from 'react';
 
 // class Try extends Component {
 //     render() {
@@ -13,13 +13,15 @@ import React, { Component } from 'react';
 //     }
 // }
 
-const Try = ({ tryInfo }) => {
+
+// hooks용 props/state 감지기
+const Try = memo(({ tryInfo }) => {
     return (
         <li>
             <div>{tryInfo.try}</div>
             <div>{tryInfo.result}</div>
         </li>
     )
-}
+})
 
 export default Try;

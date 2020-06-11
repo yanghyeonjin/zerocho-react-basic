@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, memo } from 'react';
 
 import Try from './Try';
 
@@ -15,7 +15,7 @@ function getNumbers() {
     return array;
 }
 
-const NumberBaseball = () => {
+const NumberBaseball = memo(() => {
     const [result, setResult] = useState('');
     const [value, setValue] = useState('');
     const [answer, setAnswer] = useState(getNumbers());
@@ -92,7 +92,7 @@ const NumberBaseball = () => {
             </ul>
         </>
     )
-}
+})
 
 // class NumberBaseball extends Component {
 //     state = {

@@ -1,6 +1,23 @@
 import React, { Component } from 'react';
 
+// props/state 변경 감지
+// > Component + shouldComponentUpdate를 사용하거나, PureComponent를 사용
+
+// > PureComponent
+// >> shouldComponentUpdate에서 return true, false를 언제 할지 알아서 결정한다.
+// >> 언제 결정? props/state 값의 변경
+// >> 단점은 배열, 객체와 같이 참조관계가 있는 타입은 어려워 한다. > 객체/배열의 reference가 바뀌면 return true
+
+// >> array item의 값이 바뀌는 것을 알아차리기 위해
+// >> 이전 배열을 복사해서 새로운 배열을 생성하는 방식을 사용하자. [...array, new data] (PureComponent/Component 상관없이)
+
+// Component는 그럼 버려야 하나?
+// >> 아니다. state/props 값이 바뀌어도 재렌더링 하고싶지 않을 때가 있을 수 있다.
+// >> Component는 커스터마이징이 쉽다.
+
 class RenderTest extends Component {
+    // state는 웬만하면 간단한 구조를 쓰자. (나중에 다루기 어려워 질 수 있다.)
+    // ex) a: 1, obj: {first: 'a', second: 'b'}, array: [1, 2, 3]
     state = {
         counter: 0
     }
