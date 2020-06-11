@@ -25,9 +25,9 @@ class ResponseCheck extends Component {
                     state: 'now',
                     message: '지금 클릭!'
                 })
+                this.startTime = new Date();
             }, Math.floor(Math.random() * 1000) + 2000); // 2초 ~ 3초 뒤 실행됨.
 
-            this.startTime = new Date();
         } else if (state === 'ready') {
             // 화면 넘어가는 순서가 waiting -> ready -> now 인데, waiting에서 setTimeout 설정 해둠.
             // ready인 상태에서 클릭해도 설정해둔 타임아웃때문에 다음 단계인 now로 넘어감.
