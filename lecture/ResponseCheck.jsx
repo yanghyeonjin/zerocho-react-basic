@@ -56,12 +56,23 @@ class ResponseCheck extends Component {
         }
     }
 
+    // 리셋버튼 클릭
+    onClickReset = () => {
+        this.setState({
+            result: []
+        })
+    }
+
     renderAverage = () => {
         const { result } = this.state;
 
         // 한 번 이상 제대로 클릭하면 기록되기 시작함.
         // null -> 태그가 없는 것을 의미
-        return result.length === 0 ? null : <div>평균 시간: {result.reduce((a, c) => a + c) / result.length}ms</div>
+        return result.length === 0 ? null :
+            <>
+                <div>평균 시간: {result.reduce((a, c) => a + c) / result.length}ms</div>
+                <button onClick={this.onClickReset}>reset</button>
+            </>
     }
 
     render() {
