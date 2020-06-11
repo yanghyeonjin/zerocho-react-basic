@@ -1,3 +1,10 @@
+#### lifecycle
+- 클래스의 경우
+- : constructor, 함수 -> render -> ref설정 (ref가 있다면) -> componentDidMount
+- : state/props 바뀔 때 -> shouldComponentUpdate(true) -> render -> componentDidUpdate
+- : 부모가 나를 없앴을 때 -> componentWillUnmount -> 소멸
+<br>
+
 #### render()
 - render 안에 this.setState() 하지 말자. (무한 렌더링)
 - 부모에게 물려받은 props 값 변경 안 됨.

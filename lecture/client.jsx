@@ -8,7 +8,10 @@ import { hot } from 'react-hot-loader/root';
 // import ResponseCheck from './ResponseCheck';
 // const Hot = hot(ResponseCheck);
 
-import ResponseCheckHooks from './ResponseCheckHooks';
-const Hot = hot(ResponseCheckHooks);
+// import ResponseCheckHooks from './ResponseCheckHooks';
+// const Hot = hot(ResponseCheckHooks);
+
+import RockPaperScissors from './RockPaperScissors';
+const Hot = hot(RockPaperScissors);
 
 ReactDOM.render(<Hot />, document.querySelector('#root'));
