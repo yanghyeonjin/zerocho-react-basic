@@ -60,7 +60,21 @@ const ResponseCheckHooks = () => {
             <div id="screen" className={state} onClick={onClickScreen}>
                 {message}
             </div>
-            {renderAverage()}
+            {/* return 안에서 if문 사용 */}
+            {/* 함수를 만들고 즉시 실행되도록 */}
+            {(() => {
+                if (result.length === 0) {
+                    return null;
+                } else {
+                    return (
+                        <>
+                            <div>평균 시간: {result.reduce((a, c) => a + c) / result.length}ms</div>
+                            <button onClick={onClickReset}>reset</button>
+                        </>
+                    )
+                }
+            })()}
+            {/* {renderAverage()} */}
         </>
     )
 }
