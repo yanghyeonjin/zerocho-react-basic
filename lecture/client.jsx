@@ -17,7 +17,10 @@ import { hot } from 'react-hot-loader/root';
 // import RockPaperScissorsHooks from './RockPaperScissorsHooks';
 // const Hot = hot(RockPaperScissorsHooks);
 
-import Lotto from './Lotto';
-const Hot = hot(Lotto);
+// import Lotto from './Lotto';
+// const Hot = hot(Lotto);
+
+import LottoHooks from './LottoHooks';
+const Hot = hot(LottoHooks);
 
 ReactDOM.render(<Hot />, document.querySelector('#root'));

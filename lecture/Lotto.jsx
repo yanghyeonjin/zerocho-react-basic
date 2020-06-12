@@ -56,7 +56,7 @@ class Lotto extends Component {
 
     // 한 번 더 눌렀을 때에는 여기에서 작업
     componentDidUpdate(prevProps, prevState) {
-        if (this.state.winBalls.length === 0) {
+        if (this.timeouts.length === 0) {
             // 한 번 더 눌렀을 때, winBalls.length가 0이 된다.
             // 이때에만 setTimeout 다시 설정
             this.runTimeouts();
