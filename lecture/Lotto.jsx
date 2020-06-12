@@ -16,6 +16,8 @@ function getWinNumbers() {
     return [...winNumbers, bounsNumber];
 }
 
+const BALL_APPEAR_TIME = 1000;
+
 class Lotto extends Component {
     state = {
         winNumbers: getWinNumbers(),
@@ -23,6 +25,37 @@ class Lotto extends Component {
         bonus: null, // 보너스 공
         redo: false // 재실행 여부
     };
+
+    timeouts = [];
+
+    componentDidMount() {
+        const { winNumbers } = this.state;
+
+        for (let i = 0; i < winNumbers.length - 1; i++) {
+            // let을 쓰면 클로저 문제 해결???? 대박
+            this.timeouts[i] = setTimeout(() => {
+                this.setState((prevState) => {
+                    return {
+                        winBalls: [...prevState.winBalls, winNumbers[i]]
+                    }
+                })
+            }, (i + 1) * BALL_APPEAR_TIME) // 첫번째 공은 1초, 두번째 공은 2초... 뒤에 등장하도록 셋팅 (1초마다 나타남.)
+        }
+
+        this.timeouts[6] = setTimeout(() => {
+            this.setState({
+                bonus: winNumbers[6],
+                redo: true
+            });
+        }, 7000)
+    }
+
+    componentWillUnmount() {
+        // 정리 작업 해주자. 메모리 누수 문제 최대한 줄이자.
+        this.timeouts.forEach((v) => {
+            clearTimeout(v);
+        })
+    }
 
     render() {
         const { winBalls, bonus, redo } = this.state;
@@ -33,8 +66,10 @@ class Lotto extends Component {
                     {winBalls.map((v) => <Ball key={v} number={v} />)}
                 </div>
                 <div>보너스!</div>
+
+                {/* 조건에 따라 element 보일지 말지 결정 */}
                 {bonus && <Ball number={bonus} />}
-                <button onClick={redo ? this.onClickRedo : () => { }}>한 번 더!</button>
+                {redo && <button onClick={this.onClickRedo}>한 번 더!</button>}
             </>
         )
     }
