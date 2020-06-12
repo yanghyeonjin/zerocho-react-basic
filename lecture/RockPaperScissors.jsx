@@ -26,7 +26,7 @@ const computerChoice = (imgCoord) => {
 class RockPaperScissors extends Component {
     state = {
         result: '',
-        imgCoord: '0',
+        imgCoord: imgCoords.rock,
         score: 0
     }
 
