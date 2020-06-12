@@ -28,7 +28,7 @@ class Lotto extends Component {
 
     timeouts = [];
 
-    componentDidMount() {
+    runTimeouts = () => {
         const { winNumbers } = this.state;
 
         for (let i = 0; i < winNumbers.length - 1; i++) {
@@ -50,11 +50,35 @@ class Lotto extends Component {
         }, 7000)
     }
 
+    componentDidMount() {
+        this.runTimeouts();
+    }
+
+    // 한 번 더 눌렀을 때에는 여기에서 작업
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.winBalls.length === 0) {
+            // 한 번 더 눌렀을 때, winBalls.length가 0이 된다.
+            // 이때에만 setTimeout 다시 설정
+            this.runTimeouts();
+        }
+    }
+
     componentWillUnmount() {
         // 정리 작업 해주자. 메모리 누수 문제 최대한 줄이자.
         this.timeouts.forEach((v) => {
             clearTimeout(v);
         })
+    }
+
+    // 처음 상태로 초기화
+    onClickRedo = () => {
+        this.setState({
+            winNumbers: getWinNumbers(),
+            winBalls: [],
+            bonus: null,
+            redo: false
+        })
+        this.timeouts = []
     }
 
     render() {
