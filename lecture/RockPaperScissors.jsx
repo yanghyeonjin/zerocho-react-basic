@@ -12,6 +12,17 @@ const scores = {
     paper: -1
 }
 
+const TIMEOUT = 100;
+
+// 컴퓨터가 어떤 손 내고 있는지 판단하는 함수
+const computerChoice = (imgCoord) => {
+    for (let key in imgCoords) {
+        if (imgCoords[key] === imgCoord) {
+            return key;
+        }
+    }
+}
+
 class RockPaperScissors extends Component {
     state = {
         result: '',
@@ -26,25 +37,7 @@ class RockPaperScissors extends Component {
         // setInterval(): 반복 작업
         // 컴포넌트가 사라져도 알아서 사라지지 않는다.
         // componentWillUnmount에서 삭제
-        this.interval = setInterval(() => {
-            const { imgCoord } = this.state; // 바깥에 선언하면 자바스크립트 클로저 문제가 있음. 내부에 선언하자.
-            if (imgCoord === imgCoords.rock) {
-                // 바위 -> 가위로 변경
-                this.setState({
-                    imgCoord: imgCoords.scissor
-                })
-            } else if (imgCoord === imgCoords.scissor) {
-                // 가위 -> 보로 변경
-                this.setState({
-                    imgCoord: imgCoords.paper
-                })
-            } else if (imgCoord === imgCoords.paper) {
-                // 보 -> 바위로 변경
-                this.setState({
-                    imgCoord: imgCoords.rock
-                })
-            }
-        }, 1000);
+        this.interval = setInterval(this.changeHand, TIMEOUT);
     }
 
     // 리렌더링 후
@@ -58,8 +51,64 @@ class RockPaperScissors extends Component {
         clearInterval(this.interval);
     }
 
-    onClickBtn = (choice) => {
+    // 컴퓨터 손 바꾸는 함수
+    changeHand = () => {
+        const { imgCoord } = this.state; // 바깥에 선언하면 자바스크립트 클로저 문제가 있음. 내부에 선언하자.
+        if (imgCoord === imgCoords.rock) {
+            // 바위 -> 가위로 변경
+            this.setState({
+                imgCoord: imgCoords.scissor
+            })
+        } else if (imgCoord === imgCoords.scissor) {
+            // 가위 -> 보로 변경
+            this.setState({
+                imgCoord: imgCoords.paper
+            })
+        } else if (imgCoord === imgCoords.paper) {
+            // 보 -> 바위로 변경
+            this.setState({
+                imgCoord: imgCoords.rock
+            })
+        }
+    }
 
+    onClickBtn = (choice) => {
+        const { imgCoord } = this.state;
+        clearInterval(this.interval); // 사진 멈추고
+
+        // 점수계산
+        const myScore = scores[choice]; // 나의 선택
+        const cpuScore = scores[computerChoice(imgCoord)]; // 컴퓨터의 선택
+        const diff = myScore - cpuScore;
+
+        if (diff === 0) {
+            // 비김
+            this.setState({
+                result: '비겼습니다!'
+            })
+        } else if ([-1, 2].includes(diff)) {
+            // 이긴 경우
+            this.setState((prevState) => {
+                return {
+                    result: '이겼습니다!',
+                    score: prevState.score + 1
+                }
+            })
+        } else {
+            // 짐
+            this.setState((prevState) => {
+                return {
+                    result: '졌습니다!',
+                    score: prevState.score - 1
+                }
+            })
+        }
+
+        setTimeout(() => {
+            // 2초 기다리고 (손 확인할 수 있게)
+            // 손 다시 움직이기
+            this.interval = setInterval(this.changeHand, TIMEOUT)
+        }, 2000);
     }
 
     render() {
