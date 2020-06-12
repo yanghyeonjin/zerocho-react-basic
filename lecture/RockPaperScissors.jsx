@@ -12,7 +12,7 @@ const scores = {
     paper: -1
 }
 
-const TIMEOUT = 100;
+const TIMEOUT = 200;
 
 // 컴퓨터가 어떤 손 내고 있는지 판단하는 함수
 const computerChoice = (imgCoord) => {
@@ -72,7 +72,8 @@ class RockPaperScissors extends Component {
         }
     }
 
-    onClickBtn = (choice) => {
+    // onClick={(e) => this.onClickBtn('rock')}
+    onClickBtn = (choice) => (e) => {
         const { imgCoord } = this.state;
         clearInterval(this.interval); // 사진 멈추고
 
@@ -118,9 +119,9 @@ class RockPaperScissors extends Component {
             <>
                 <div id="computer" style={{ background: `url(https://en.pimg.jp/023/182/267/1/23182267.jpg) ${imgCoord} 0` }}></div>
                 <div>
-                    <button id="rock" className="btn" onClick={() => { this.onClickBtn('rock') }}>바위</button>
-                    <button id="scissor" className="btn" onClick={() => { this.onClickBtn('scissor') }}>가위</button>
-                    <button id="paper" className="btn" onClick={() => { this.onClickBtn('paper') }}>보</button>
+                    <button id="rock" className="btn" onClick={this.onClickBtn('rock')}>바위</button>
+                    <button id="scissor" className="btn" onClick={this.onClickBtn('scissor')}>가위</button>
+                    <button id="paper" className="btn" onClick={this.onClickBtn('paper')}>보</button>
                 </div>
                 <div>{result}</div>
                 <div>현재 {score}점</div>
