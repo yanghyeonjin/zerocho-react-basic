@@ -1,7 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import Ball from './Ball';
 
 // 랜덤으로 로또번호 생성
+// Hooks에서는 다시 렌더링 될 때 모두 렌더링 하기 때문에 이 함수도 계속 호출됨.
+// 이 함수가 10초 이상 걸리는 함수이면 문제!! => useMemo를 사용하여 해결
 function getWinNumbers() {
     console.log('getWinNumbers');
 
@@ -19,7 +21,9 @@ function getWinNumbers() {
 const BALL_APPEAR_TIME = 1000;
 
 const Lotto = () => {
-    const [winNumbers, setWinNumbers] = useState(getWinNumbers());
+    const lottoNumbers = useMemo(() => getWinNumbers(), []); // []에 있는 인자가 바뀌지 않는 한 getWinNumbers()는 다시 실행되지 않음.
+
+    const [winNumbers, setWinNumbers] = useState(lottoNumbers);
     const [winBalls, setWinBalls] = useState([]);
     const [bonus, setBonus] = useState(null);
     const [redo, setRedo] = useState(false);
@@ -56,14 +60,16 @@ const Lotto = () => {
     }, [timeouts.current]); // inputs가 빈 배열이면 componentDidMount와 동일. 배열에 요소가 있으면 componentDidMount랑 componentDidUpdate 둘 다 수행
 
     // 처음 상태로 초기화
-    const onClickRedo = () => {
+    // 재렌더링 되어도 함수가 다시 생성되지 않음.
+    const onClickRedo = useCallback(() => {
+        console.log(winNumbers);
         setWinNumbers(getWinNumbers());
         setWinBalls([]);
         setBonus(null);
         setRedo(false);
 
         timeouts.current = [];
-    }
+    }, [winNumbers]) // winNumbers 바뀌면 useCallback 다시 실행
 
     return (
         <>
