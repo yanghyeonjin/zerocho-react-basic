@@ -34,13 +34,14 @@ const RockPaperScissorsHooks = () => {
     // useEffect 사용으로 해결 (componentDidMount, componentDidUpdate 역할. 1:1 대응은 아님)
 
     // 맨 처음에만 한 번 실행하는데 imgCoord를 넣어주면 -> 난 imgCoord가 변경될 때 다시 실행한다.
+    // 여러개 사용 가능 (state마다 다르게 효과를 낼 수 있기 때문)
     useEffect(() => {
         intervalRef.current = setInterval(changeHand, TIMEOUT);
         return () => {
             // 이 부분이 componentWillUnmount 역할
             clearInterval(intervalRef.current)
         }
-    }, [imgCoord]); // 배열로 클로저 문제 해결
+    }, [imgCoord]); // 배열로 클로저 문제 해결, 배열에는 다시 실행할 값만 넣어주자.
 
     // 컴퓨터 손 바꾸는 함수
     const changeHand = () => {
