@@ -1,9 +1,13 @@
 import React from 'react';
 import Tr from './tr'
 
-const Table = () => {
+const Table = ({ onClick, tableData }) => {
     return (
-        <Tr></Tr>
+        <table onClick={onClick}>
+            {Array(tableData.length).fill().map((value, index) => {
+                return <Tr rowData={tableData[index]}></Tr>
+            })}
+        </table >
     )
 }
 
