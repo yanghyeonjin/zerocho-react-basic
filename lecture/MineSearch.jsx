@@ -25,7 +25,35 @@ const initialState = {
     result: ''
 }
 
+const plantMine = (row, col, mine) => {
+    // ex) row: 10, col: 10, mine: 20
+    const candidate = Array(row * col).fill().map((arr, i) => { // 0 ~ 99 칸 만들기
+        return i;
+    });
+    const shuffle = [];
+    while (candidate.length > row * col - mine) {
+        const chosen = candidate.splice(Math.floor(Math.random() * candidate.length), 1)[0]; // 0 ~ 99 숫자 중에서 20개 숫자 고르기 (지뢰 숫자 만큼)
+        shuffle.push(chosen); // shuffle 배열에 저장
+    }
+    const data = [];
+    for (let i = 0; i < row; i++) {
+        const rowData = [];
+        data.push(rowData);
+        for (let j = 0; j < col; j++) {
+            rowData.push(CODE.NORMAL); // 기본은 normal로 해둠.
+        }
+    }
 
+    // 랜덤으로 뽑아진 지뢰 심기
+    for (let k = 0; k < shuffle.length; k++) {
+        // 만약 22이면 (2,2)
+        const ver = Math.floor(shuffle[k] / col);
+        const hor = shuffle[k] % col;
+        data[ver][hor] = CODE.MINE;
+    }
+
+    return data;
+};
 
 const reducer = (state, action) => {
     switch (action.type) {
