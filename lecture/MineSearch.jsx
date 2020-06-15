@@ -2,7 +2,15 @@ import React, { useReducer, createContext, useMemo } from 'react';
 import MineSearchTable from './MineSearchTable';
 import MineSearchForm from './MineSearchForm';
 
-export const START_GAME = 'START_GAME';
+export const ACTION_TYPE = {
+    START_GAME: 'START_GAME',
+    OPEN_CELL: 'OPEN_CELL',
+    CLICK_MINE: 'CLICK_MINE',
+    FLAG_CELL: 'FLAG_CELL',
+    QUESTION_CELL: 'QUESTION_CELL',
+    NORMALIZE_CELL: 'NORMALIZE_CELL'
+}
+
 export const CODE = {
     MINE: -7,
     NORMAL: -1,
@@ -16,13 +24,15 @@ export const CODE = {
 
 export const TableContext = createContext({
     tableData: [],
+    halted: true,
     dispatch: () => { }
 });
 
 const initialState = {
     tableData: [],
     timer: 0,
-    result: ''
+    result: '',
+    halted: true
 }
 
 const plantMine = (row, col, mine) => {
@@ -57,11 +67,80 @@ const plantMine = (row, col, mine) => {
 
 const reducer = (state, action) => {
     switch (action.type) {
-        case START_GAME:
+        case ACTION_TYPE.START_GAME: // 게임 시작 (셀 만들기)
             return {
                 ...state,
-                tableData: plantMine(action.row, action.col, action.mine)
+                tableData: plantMine(action.row, action.col, action.mine),
+                halted: false
             }
+        case ACTION_TYPE.OPEN_CELL: {
+            const tableData = [...state.tableData];
+            tableData[action.row] = [...state.tableData[action.row]];
+            tableData[action.row][action.col] = CODE.OPENED;
+
+            return {
+                ...state,
+                tableData: tableData
+            }
+        }
+        case ACTION_TYPE.CLICK_MINE: {// 지뢰 클릭
+            const tableData = [...state.tableData];
+            tableData[action.row] = [...state.tableData[action.row]];
+            tableData[action.row][action.col] = CODE.CLICKED_MINE;
+
+            return {
+                ...state,
+                tableData: tableData,
+                halted: true // 게임 중단
+            }
+        };
+        case ACTION_TYPE.FLAG_CELL: {// 깃발로 변경
+            const tableData = [...state.tableData];
+            tableData[action.row] = [...state.tableData[action.row]];
+
+            if (tableData[action.row][action.col] === CODE.MINE) {
+                // 깃발을 꽂을 칸이 지뢰가 있는 칸이면
+                tableData[action.row][action.col] = CODE.FLAG_MINE;
+            } else {
+                tableData[action.row][action.col] = CODE.FLAG;
+            }
+
+            return {
+                ...state,
+                tableData: tableData,
+                halted: true // 게임 중단
+            }
+        };
+        case ACTION_TYPE.QUESTION_CELL: {// 깃발 -> 물음표 
+            const tableData = [...state.tableData];
+            tableData[action.row] = [...state.tableData[action.row]];
+
+            if (tableData[action.row][action.col] === CODE.FLAG_MINE) {
+                tableData[action.row][action.col] = CODE.QUESTION_MINE;
+            } else {
+                tableData[action.row][action.col] = CODE.QUESTION;
+            }
+
+            return {
+                ...state,
+                tableData: tableData
+            }
+        };
+        case ACTION_TYPE.NORMALIZE_CELL: {// 물음표 -> 기본
+            const tableData = [...state.tableData];
+            tableData[action.row] = [...state.tableData[action.row]];
+
+            if (tableData[action.row][action.col] === CODE.QUESTION_MINE) {
+                tableData[action.row][action.col] = CODE.MINE;
+            } else {
+                tableData[action.row][action.col] = CODE.NORMAL;
+            }
+
+            return {
+                ...state,
+                tableData: tableData
+            }
+        };
         default:
             return state;
     }
@@ -69,21 +148,23 @@ const reducer = (state, action) => {
 
 const MineSearch = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
+    const { tableData, halted, timer, result } = state;
 
     // useMemo를 통해 캐싱 후 전달
     const value = useMemo(() => {
         return {
-            tableData: state.tableData,
+            tableData: tableData,
+            halted: halted,
             dispatch: dispatch
         }
-    }, [state.tableData])
+    }, [tableData, halted])
 
     return (
         <TableContext.Provider value={value}>
             <MineSearchForm></MineSearchForm>
-            <div>{state.timer}</div>
+            <div>{timer}</div>
             <MineSearchTable></MineSearchTable>
-            <div>{state.result}</div>
+            <div>{result}</div>
         </TableContext.Provider>
     )
 }

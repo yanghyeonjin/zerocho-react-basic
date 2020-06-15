@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useContext } from 'react';
-import { TableContext, START_GAME } from './MineSearch';
+import { TableContext, ACTION_TYPE } from './MineSearch';
 
 const MineSearchForm = () => {
     const [row, setRow] = useState(10); // 세로 몇 줄
@@ -22,7 +22,7 @@ const MineSearchForm = () => {
 
     const onClickBtn = useCallback(() => {
         dispatch({
-            type: START_GAME,
+            type: ACTION_TYPE.START_GAME,
             row: row,
             col: col,
             mine: mine

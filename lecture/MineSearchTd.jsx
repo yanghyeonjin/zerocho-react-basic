@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { TableContext, CODE } from './MineSearch';
+import React, { useContext, useCallback } from 'react';
+import { TableContext, CODE, ACTION_TYPE } from './MineSearch';
 
 const getTdStyle = (code) => {
     switch (code) {
@@ -8,9 +8,20 @@ const getTdStyle = (code) => {
             return {
                 background: '#444'
             }
+        case CODE.CLICKED_MINE:
         case CODE.OPENED:
             return {
                 background: 'white'
+            }
+        case CODE.FLAG:
+        case CODE.FLAG_MINE:
+            return {
+                background: 'red'
+            }
+        case CODE.QUESTION:
+        case CODE.QUESTION_MINE:
+            return {
+                background: 'yellow'
             }
         default:
             return {
@@ -25,14 +36,82 @@ const getTdText = (code) => {
             return '';
         case CODE.MINE:
             return 'X';
+        case CODE.CLICKED_MINE:
+            return '펑';
+        case CODE.FLAG:
+        case CODE.FLAG_MINE:
+            return '!';
+        case CODE.QUESTION:
+        case CODE.QUESTION_MINE:
+            return '?'
+        default:
+            return '';
     }
 }
 
 const MineSearchTd = ({ rowIndex, colIndex }) => {
-    const { tableData } = useContext(TableContext);
+    const { tableData, dispatch, halted } = useContext(TableContext);
+
+    const onClickTd = useCallback(() => {
+        if (halted) { // 게임 멈췄으면 그냥 리턴
+            return;
+        }
+
+        switch (tableData[rowIndex][colIndex]) {
+            case CODE.NORMAL:
+                dispatch({
+                    type: ACTION_TYPE.OPEN_CELL,
+                    row: rowIndex,
+                    col: colIndex
+                })
+                return;
+            case CODE.MINE:
+                dispatch({ type: ACTION_TYPE.CLICK_MINE, row: rowIndex, col: colIndex })
+                return;
+            case CODE.OPENED:
+            case CODE.FLAG:
+            case CODE.FLAG_MINE:
+            case CODE.QUESTION:
+            case CODE.QUESTION_MINE:
+                return;
+            default:
+                return;
+        }
+    }, [tableData[rowIndex][colIndex], halted])
+
+    const onRightClickTd = useCallback((e) => {
+        e.preventDefault(); // 메뉴 안뜨게
+
+        if (halted) {
+            return;
+        }
+
+        switch (tableData[rowIndex][colIndex]) {
+            case CODE.NORMAL:
+            case CODE.MINE:
+                dispatch({
+                    type: ACTION_TYPE.FLAG_CELL, row: rowIndex, col: colIndex
+                })
+                return;
+            case CODE.FLAG_MINE:
+            case CODE.FLAG:
+                dispatch({
+                    type: ACTION_TYPE.QUESTION_CELL, row: rowIndex, col: colIndex
+                })
+                return;
+            case CODE.QUESTION:
+            case CODE.QUESTION_MINE:
+                dispatch({
+                    type: ACTION_TYPE.NORMALIZE_CELL, row: rowIndex, col: colIndex
+                })
+                return;
+            default:
+                return;
+        }
+    }, [tableData[rowIndex][colIndex], halted])
 
     return (
-        <td style={getTdStyle(tableData[rowIndex][colIndex])}>{getTdText(tableData[rowIndex][colIndex])}</td>
+        <td onClick={onClickTd} onContextMenu={onRightClickTd} style={getTdStyle(tableData[rowIndex][colIndex])}>{getTdText(tableData[rowIndex][colIndex])}</td>
     )
 }
 
