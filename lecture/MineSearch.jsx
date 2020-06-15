@@ -1,4 +1,4 @@
-import React, { useReducer, createContext, useMemo } from 'react';
+import React, { useReducer, createContext, useMemo, useEffect } from 'react';
 import MineSearchTable from './MineSearchTable';
 import MineSearchForm from './MineSearchForm';
 
@@ -8,7 +8,8 @@ export const ACTION_TYPE = {
     CLICK_MINE: 'CLICK_MINE',
     FLAG_CELL: 'FLAG_CELL',
     QUESTION_CELL: 'QUESTION_CELL',
-    NORMALIZE_CELL: 'NORMALIZE_CELL'
+    NORMALIZE_CELL: 'NORMALIZE_CELL',
+    INCREMENT_TIMER: 'INCREMENT_TIMER'
 }
 
 export const CODE = {
@@ -30,9 +31,15 @@ export const TableContext = createContext({
 
 const initialState = {
     tableData: [],
+    data: {
+        row: 0,
+        col: 0,
+        mine: 0
+    },
     timer: 0,
     result: '',
-    halted: true
+    halted: true,
+    openedCell: 0
 }
 
 const plantMine = (row, col, mine) => {
@@ -70,6 +77,13 @@ const reducer = (state, action) => {
         case ACTION_TYPE.START_GAME: // 게임 시작 (셀 만들기)
             return {
                 ...state,
+                data: {
+                    row: action.row,
+                    col: action.col,
+                    mine: action.mine
+                },
+                openedCell: 0,
+                timer: 0,
                 tableData: plantMine(action.row, action.col, action.mine),
                 halted: false
             }
@@ -80,6 +94,9 @@ const reducer = (state, action) => {
             tableData.forEach((row, i) => {
                 tableData[i] = [...state.tableData[i]];
             });
+
+            // 몇 개 열었는지 체크
+            let openCount = 0;
 
             // 내 기준으로 주변 칸 열기
             const checked = [];
@@ -129,7 +146,7 @@ const reducer = (state, action) => {
                 const count = around.filter((v) => {
                     return [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v);
                 }).length;
-                tableData[row][col] = count;
+
                 if (count === 0) { // 지뢰 없으면
                     const near = [];
                     if (row - 1 > 0) {
@@ -151,16 +168,30 @@ const reducer = (state, action) => {
                             checkAround(n[0], n[1]);
                         }
                     })
-                } else {
-
                 }
+
+                // 카운팅 제대로 안 되는 것 해결 (닫혀있었던 칸만 계산한다.)
+                if (tableData[row][col] === CODE.NORMAL) {
+                    openCount += 1;
+                }
+                tableData[row][col] = count;
             }
 
             checkAround(action.row, action.col);
+            let halted = false;
+            let result = '';
+            if (state.data.row * state.data.col - state.data.mine === state.openedCell + openCount) {
+                // 지뢰 뺀 나머지 칸 === 열린 칸 + 방금 연 칸
+                halted = true;
+                result = `${state.timer}초 만에 승리하셨습니다`;
+            }
 
             return {
                 ...state,
-                tableData: tableData
+                tableData: tableData,
+                openedCell: state.openedCell + openCount,
+                halted: halted,
+                result: result
             }
         }
         case ACTION_TYPE.CLICK_MINE: {// 지뢰 클릭
@@ -221,6 +252,12 @@ const reducer = (state, action) => {
                 tableData: tableData
             }
         };
+        case ACTION_TYPE.INCREMENT_TIMER: {
+            return {
+                ...state,
+                timer: state.timer + 1
+            }
+        }
         default:
             return state;
     }
@@ -238,6 +275,21 @@ const MineSearch = () => {
             dispatch: dispatch
         }
     }, [tableData, halted])
+
+    useEffect(() => {
+        let timer;
+        if (halted === false) {
+            // 1초 마다 타이머 증가
+            timer = setInterval(() => {
+                dispatch({
+                    type: ACTION_TYPE.INCREMENT_TIMER
+                })
+            }, 1000)
+        }
+        return () => {
+            clearInterval(timer)
+        }
+    }, [halted])
 
     return (
         <TableContext.Provider value={value}>
