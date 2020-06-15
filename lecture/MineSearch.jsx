@@ -291,14 +291,16 @@ const MineSearch = () => {
         }
     }, [halted])
 
-    return (
-        <TableContext.Provider value={value}>
-            <MineSearchForm></MineSearchForm>
-            <div>{timer}</div>
-            <MineSearchTable></MineSearchTable>
-            <div>{result}</div>
-        </TableContext.Provider>
-    )
+    return useMemo(() => {
+        return (
+            <TableContext.Provider value={value}>
+                <MineSearchForm></MineSearchForm>
+                <div>{timer}</div>
+                <MineSearchTable></MineSearchTable>
+                <div>{result}</div>
+            </TableContext.Provider>
+        )
+    })
 }
 
 export default MineSearch;

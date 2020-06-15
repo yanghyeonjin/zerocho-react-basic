@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useContext, useCallback, memo, useMemo } from 'react';
 import { TableContext, CODE, ACTION_TYPE } from './MineSearch';
 
 const getTdStyle = (code) => {
@@ -49,7 +49,7 @@ const getTdText = (code) => {
     }
 }
 
-const MineSearchTd = ({ rowIndex, colIndex }) => {
+const MineSearchTd = memo(({ rowIndex, colIndex }) => {
     const { tableData, dispatch, halted } = useContext(TableContext);
 
     const onClickTd = useCallback(() => {
@@ -110,9 +110,14 @@ const MineSearchTd = ({ rowIndex, colIndex }) => {
         }
     }, [tableData[rowIndex][colIndex], halted])
 
-    return (
-        <td onClick={onClickTd} onContextMenu={onRightClickTd} style={getTdStyle(tableData[rowIndex][colIndex])}>{getTdText(tableData[rowIndex][colIndex])}</td>
-    )
-}
+    return useMemo(() => {
+        return (
+            <td onClick={onClickTd} onContextMenu={onRightClickTd} style={getTdStyle(tableData[rowIndex][colIndex])}>
+                {getTdText(tableData[rowIndex][colIndex])}
+                {console.log('real render td')}
+            </td>
+        )
+    })
+})
 
 export default MineSearchTd;
