@@ -23,7 +23,10 @@ import { hot } from 'react-hot-loader/root';
 // import LottoHooks from './LottoHooks';
 // const Hot = hot(LottoHooks);
 
-import TicTacToe from './TicTacToe';
-const Hot = hot(TicTacToe);
+// import TicTacToe from './TicTacToe';
+// const Hot = hot(TicTacToe);
+
+import MineSearch from './MineSearch';
+const Hot = hot(MineSearch);
 
 ReactDOM.render(<Hot />, document.querySelector('#root'));

@@ -44,3 +44,10 @@ useEffect(() => {
     }
 }, [changeValue])
 ```
+<br><br><br>
+
+### Check List
+- Chrome react tool 설치 및 렌더링 하이라이트 설정
+- 다 만들고 렌더링 최적화 (성능 최적화. 초록색 정도는 ㄱㅊ)
+- 직접 만든 함수는 useCallback으로 감싸주기
+- Class Component (development) -> Hooks (production)
