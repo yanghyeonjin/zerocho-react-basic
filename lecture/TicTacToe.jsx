@@ -7,7 +7,9 @@ const initialState = {
     tableData: [['', '', ''], ['', '', ''], ['', '', '']]
 }
 
-const SET_WINNER = 'SET_WINNER';
+export const SET_WINNER = 'SET_WINNER';
+export const CLICK_CELL = 'CLICK_CELL';
+export const CHANGE_TURN = 'CHANGE_TURN';
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -17,8 +19,26 @@ const reducer = (state, action) => {
                 ...state,
                 winner: action.winner
             }
-        default:
-            break;
+
+        case CLICK_CELL: {
+            // Td.jsx에서 넘어온 row, col 사용
+            // react의 불변성을 유지하기 위해 얕은 복사 사용.
+            const tableData = [...state.tableData];
+            tableData[action.row] = [...tableData[action.row]]; // immer라는 라이브러리로 가독성 해결
+            tableData[action.row][action.col] = state.turn;
+
+            return {
+                ...state,
+                tableData
+            }
+        }
+
+        case CHANGE_TURN: {
+            return {
+                ...state,
+                turn: state.turn === 'O' ? 'X' : 'O'
+            }
+        }
     }
 }
 
@@ -39,7 +59,7 @@ const TicTacToe = () => {
 
     return (
         <>
-            <Table onClick={onClickTable} tableData={state.tableData}></Table>
+            <Table onClick={onClickTable} tableData={state.tableData} dispatch={dispatch}></Table>
             {state.winner && <div>{state.winner}님의 승리</div>}
         </>
     )
