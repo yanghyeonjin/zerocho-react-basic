@@ -20,7 +20,10 @@ import { hot } from 'react-hot-loader/root';
 // import Lotto from './Lotto';
 // const Hot = hot(Lotto);
 
-import LottoHooks from './LottoHooks';
-const Hot = hot(LottoHooks);
+// import LottoHooks from './LottoHooks';
+// const Hot = hot(LottoHooks);
+
+import TicTacToe from './TicTacToe';
+const Hot = hot(TicTacToe);
 
 ReactDOM.render(<Hot />, document.querySelector('#root'));
