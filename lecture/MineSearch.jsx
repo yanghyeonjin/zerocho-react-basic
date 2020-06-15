@@ -76,40 +76,87 @@ const reducer = (state, action) => {
         case ACTION_TYPE.OPEN_CELL: {
             const tableData = [...state.tableData];
             tableData[action.row] = [...state.tableData[action.row]];
-            tableData[action.row][action.col] = CODE.OPENED;
 
-            // 주변 칸 열기
-            let around = [];
+            tableData.forEach((row, i) => {
+                tableData[i] = [...state.tableData[i]];
+            });
 
-            if (tableData[action.row - 1]) { // 윗 줄이 있는 경우
-                // 윗 줄 세칸에 넣어주기
+            // 내 기준으로 주변 칸 열기
+            const checked = [];
+            const checkAround = (row, col) => {
+                if ([CODE.OPENED, CODE.FLAG_MINE, CODE.FLAG, CODE.QUESTION_MINE, CODE.QUESTION].includes(tableData[row][col])) {
+                    return;
+                }
+
+                if (row < 0 || row >= tableData.length || col < 0 || col >= tableData[0].length) { // 상하좌우가 칸이 아닌 경우 필터링
+                    return;
+                }
+
+                // 한 번 검사한 칸은 다시 검사하지 않도록 (안 막아주면 재귀함수 돌릴 때 콜스택 터짐. 왜냐하면 내 칸 옆에 있는 칸들을 검사하니까 서로서로 검사하게 됨.)
+                if (checked.includes(row + ',' + col)) {
+                    return;
+                } else {
+                    checked.push(row + ',' + col);
+                }
+
+                let around = [];
+
+                if (tableData[row - 1]) { // 윗 줄이 있는 경우
+                    // 윗 줄 세칸에 넣어주기
+                    around = around.concat(
+                        tableData[row - 1][col - 1],
+                        tableData[row - 1][col],
+                        tableData[row - 1][col + 1]
+                    )
+                }
+
+                // 클릭한 셀의 왼쪽, 오른쪽에 넣기
                 around = around.concat(
-                    tableData[action.row - 1][action.col - 1],
-                    tableData[action.row - 1][action.col],
-                    tableData[action.row - 1][action.col + 1]
+                    tableData[row][col - 1],
+                    tableData[row][col + 1]
                 )
+
+                // 아래칸
+                if (tableData[row + 1]) {
+                    around = around.concat(
+                        tableData[row + 1][col - 1],
+                        tableData[row + 1][col],
+                        tableData[row + 1][col + 1]
+                    )
+                }
+
+                // 주변에 지뢰있는 칸을 센다.
+                const count = around.filter((v) => {
+                    return [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v);
+                }).length;
+                tableData[row][col] = count;
+                if (count === 0) { // 지뢰 없으면
+                    const near = [];
+                    if (row - 1 > 0) {
+                        near.push([row - 1, col - 1]);
+                        near.push([row - 1, col]);
+                        near.push([row - 1, col + 1]);
+                    }
+                    near.push([row, col - 1]);
+                    near.push([row, col + 1]);
+
+                    if (row + 1 < tableData.length) {
+                        near.push([row + 1, col - 1]);
+                        near.push([row + 1, col]);
+                        near.push([row + 1, col - 1]);
+                    }
+
+                    near.forEach((n) => {
+                        if (tableData[n[0]][n[1]] !== CODE.OPENED) { // 이미 연 칸이 아닌 경우에만 검사
+                            checkAround(n[0], n[1]);
+                        }
+                    })
+                } else {
+
+                }
             }
 
-            // 클릭한 셀의 왼쪽, 오른쪽에 넣기
-            around = around.concat(
-                tableData[action.row][action.col - 1],
-                tableData[action.row][action.col + 1]
-            )
-
-            // 아래칸
-            if (tableData[action.row + 1]) {
-                around = around.concat(
-                    tableData[action.row + 1][action.col - 1],
-                    tableData[action.row + 1][action.col],
-                    tableData[action.row + 1][action.col + 1]
-                )
-            }
-
-            // 주변에 지뢰있는 칸을 센다.
-            const count = around.filter((v) => {
-                return [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v);
-            }).length;
-            tableData[action.row][action.col] = count;
+            checkAround(action.row, action.col);
 
             return {
                 ...state,
