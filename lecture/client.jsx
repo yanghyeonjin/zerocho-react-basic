@@ -26,7 +26,10 @@ import { hot } from 'react-hot-loader/root';
 // import TicTacToe from './TicTacToe';
 // const Hot = hot(TicTacToe);
 
-import MineSearch from './MineSearch';
-const Hot = hot(MineSearch);
+// import MineSearch from './MineSearch';
+// const Hot = hot(MineSearch);
+
+import ReactRouter from './ReactRouter';
+const Hot = hot(ReactRouter);
 
 ReactDOM.render(<Hot />, document.querySelector('#root'));
