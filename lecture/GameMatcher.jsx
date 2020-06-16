@@ -8,7 +8,14 @@ class GameMatcher extends Component {
     render() {
         // this.props.history: 페이지 이동했던 내역
         // this.props.location: url 정보?
+        // this.props.location.search: query string
         // this.props.match: params 정보 들어있음. /game/:name에서 name 부분
+
+        const qs = new URLSearchParams(this.props.location.search);
+        console.log(qs.get('query'))
+        console.log(qs.get('hello'))
+        console.log(qs.get('bye'))
+
 
         if (this.props.match.params.name === 'number-baseball') {
             return <NumberBaseball></NumberBaseball>
