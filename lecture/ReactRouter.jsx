@@ -28,7 +28,7 @@ const ReactRouter = () => {
         // 대신에 SEO에 안 잡힘. (SEO는 서버에게 이 페이지 알아? 라고 물어보기 때문에) -> 실무에서 잘 안 씀. (검색엔진에 안 잡히기 때문에)
         <HashRouter>
             <div>
-                <Link to="/game/number-baseball">숫자야구 </Link>
+                <Link to="/game/number-baseball?query=10&hello=zerocho&bye=react">숫자야구 </Link>
                 <Link to="/game/rock-paper-scissors">가위바위보 </Link>
                 <Link to="/game/lotto-generator">로또생성기 </Link>
                 <Link to="/game/index">game matcher</Link>
